@@ -38,6 +38,7 @@ Usage:
 
 import argparse
 import csv
+import html
 import re
 from collections import defaultdict
 from datetime import date, datetime, timedelta
@@ -50,6 +51,7 @@ import ai_triage
 # --------------------------------------------------------------------------
 
 DATA_DIR = Path(__file__).resolve().parent / "data"
+REPORT_HTML_PATH = Path(__file__).resolve().parent / "report.html"
 
 DATASETS = {
     "main": {
@@ -104,6 +106,11 @@ LABEL_RANK = {
     "partial": 5,
     "delayed": 6,
 }
+
+# AI severity is layered on top of the label (see ai_triage.py) and never
+# changes it. Both the terminal report and the HTML report group exceptions
+# by this same order, most- to least-urgent.
+SEVERITY_ORDER = ["critical", "needs_review", "explained"]
 
 
 # --------------------------------------------------------------------------
@@ -520,8 +527,7 @@ def print_report(results, score, triage_summary):
     # Severity is the AI's own judgment call, layered on top of the fixed
     # deterministic label -- it never changes which label a case got.
     # Ordered most- to least-urgent for a human triaging the list top-down.
-    severity_order = ["critical", "needs_review", "explained"]
-    for severity in severity_order:
+    for severity in SEVERITY_ORDER:
         cases = [r for r in exceptions if r.get("severity") == severity]
         if not cases:
             continue
@@ -577,6 +583,256 @@ def print_report(results, score, triage_summary):
     print()
 
 
+# --------------------------------------------------------------------------
+# Step 8: HTML report
+# --------------------------------------------------------------------------
+# A single self-contained report.html, written to the project root after
+# the terminal report. Plain inline CSS, no external stylesheets or CDN
+# links -- it has to open correctly straight off disk, offline.
+
+def total_unrefunded_amount(results) -> float:
+    """Sum of promised-but-not-actually-received rupees across every case
+    that had a promise to begin with (orphan_refund cases have none, so
+    they're excluded -- there's nothing "promised" to fall short of).
+    A case only contributes when it fell SHORT: over_refund/double_refund/
+    clean_match/delayed all resolve to zero or negative here and are
+    correctly excluded by the max(..., 0) floor.
+    """
+    total = 0.0
+    for r in results:
+        if r["promised_amount"] is None:
+            continue
+        refunded = r["refunded_amount"] or 0.0
+        shortfall = r["promised_amount"] - refunded
+        if shortfall > 0:
+            total += shortfall
+    return total
+
+
+def _html_amount(value) -> str:
+    return f"{CURRENCY}{value:,.2f}" if value is not None else "—"
+
+
+def _html_exception_rows(cases) -> str:
+    rows = []
+    for r in sorted(cases, key=lambda x: (LABEL_RANK.get(x["label"], 99), x["order_id"])):
+        confidence = r.get("confidence")
+        conf_str = f"{confidence:.2f}" if confidence is not None else "n/a"
+        fallback_note = " <span class=\"fallback-tag\">AI FALLBACK</span>" if r.get("ai_fallback") else ""
+        rows.append(
+            "<tr>"
+            f"<td class=\"mono\">{html.escape(str(r['promise_id']))}</td>"
+            f"<td class=\"mono\">{html.escape(str(r['order_id']))}</td>"
+            f"<td><span class=\"label-badge label-{html.escape(r['label'])}\">{html.escape(r['label'])}</span></td>"
+            f"<td class=\"num\">{_html_amount(r['promised_amount'])}</td>"
+            f"<td class=\"num\">{_html_amount(r['refunded_amount'])}</td>"
+            f"<td>{html.escape(r['reason'] or '')}</td>"
+            f"<td>{html.escape(r.get('justification') or '')}{fallback_note}</td>"
+            f"<td class=\"num\">{conf_str}</td>"
+            "</tr>"
+        )
+    return "\n".join(rows)
+
+
+def _html_exception_table(exceptions) -> str:
+    groups = []
+    for severity in SEVERITY_ORDER:
+        cases = [r for r in exceptions if r.get("severity") == severity]
+        if not cases:
+            continue
+        groups.append(f"""
+      <h4 class="severity-heading severity-{severity}">{severity.replace('_', ' ').title()} ({len(cases)})</h4>
+      <table class="exceptions">
+        <thead>
+          <tr>
+            <th>Promise ID</th><th>Order ID</th><th>Label</th>
+            <th>Promised</th><th>Refunded</th><th>Rule reason</th>
+            <th>AI justification</th><th>Confidence</th>
+          </tr>
+        </thead>
+        <tbody>
+{_html_exception_rows(cases)}
+        </tbody>
+      </table>""")
+    return "\n".join(groups) if groups else "<p class=\"empty\">No exceptions -- every case was a clean match.</p>"
+
+
+def _html_breakdown_table(results) -> str:
+    total = len(results)
+    counts = defaultdict(int)
+    for r in results:
+        counts[r["label"]] += 1
+    rows = []
+    for label in ALL_LABELS:
+        n = counts.get(label, 0)
+        pct = (n / total * 100) if total else 0.0
+        rows.append(
+            f"<tr><td><span class=\"label-badge label-{label}\">{label}</span></td>"
+            f"<td class=\"num\">{n}</td><td class=\"num\">{pct:.1f}%</td></tr>"
+        )
+    return "\n".join(rows)
+
+
+def render_dataset_section(name: str, results, score, triage_summary) -> str:
+    cfg = DATASETS[name]
+    total = len(results)
+    counts = defaultdict(int)
+    for r in results:
+        counts[r["label"]] += 1
+    clean = counts.get("clean_match", 0)
+    n_orphan = counts.get("orphan_refund", 0)
+    exceptions = [r for r in results if r["label"] != "clean_match"]
+    unrefunded = total_unrefunded_amount(results)
+
+    return f"""
+  <section class="dataset">
+    <h2>{html.escape(cfg['display_name'])}</h2>
+
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="stat-label">Total cases</div>
+        <div class="stat-value">{total}</div>
+        <div class="stat-sub">{total - n_orphan} CRM-promised + {n_orphan} gateway-only orphans</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Clean match rate</div>
+        <div class="stat-value">{clean}/{total}</div>
+        <div class="stat-sub">{(clean / total * 100 if total else 0):.1f}%</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Accuracy vs ground truth</div>
+        <div class="stat-value">{score['correct']}/{score['total']}</div>
+        <div class="stat-sub">{score['accuracy'] * 100:.1f}%</div>
+      </div>
+      <div class="stat stat-warning">
+        <div class="stat-label">Promised but not refunded</div>
+        <div class="stat-value">{_html_amount(unrefunded)}</div>
+        <div class="stat-sub">summed across every case still short</div>
+      </div>
+    </div>
+
+    <h3>Category breakdown</h3>
+    <table class="breakdown">
+      <thead><tr><th>Category</th><th>Count</th><th>%</th></tr></thead>
+      <tbody>
+{_html_breakdown_table(results)}
+      </tbody>
+    </table>
+
+    <h3>Exceptions ({len(exceptions)}), grouped by AI severity</h3>
+    <p class="triage-summary">
+      {triage_summary['critical']} critical &middot;
+      {triage_summary['explained']} explained &middot;
+      {triage_summary['needs_review']} need review
+      &mdash; {triage_summary['fallback_count']}/{triage_summary['total_exceptions']} defaulted to
+      needs_review via fallback (no note logged, API failure, bad JSON, or low confidence).
+    </p>
+{_html_exception_table(exceptions)}
+  </section>"""
+
+
+REPORT_CSS = """
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 32px 40px 64px;
+      background: #f4f5f7;
+      color: #1a1d23;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      line-height: 1.45;
+    }
+    h1 { font-size: 22px; margin: 0 0 4px; }
+    .generated { color: #6b7280; font-size: 13px; margin: 0 0 28px; }
+    h2 { font-size: 18px; border-bottom: 2px solid #1a1d23; padding-bottom: 6px; margin-top: 0; }
+    h3 { font-size: 15px; margin: 24px 0 8px; color: #2a2e37; }
+    h4.severity-heading { font-size: 14px; margin: 18px 0 6px; padding: 4px 10px; border-radius: 4px; display: inline-block; }
+    .severity-critical { background: #fde2e1; color: #8a1c1c; }
+    .severity-needs_review { background: #fdf1cf; color: #7a5b00; }
+    .severity-explained { background: #dcf5e3; color: #185c33; }
+    section.dataset {
+      background: #ffffff;
+      border: 1px solid #e2e4e9;
+      border-radius: 8px;
+      padding: 24px 28px;
+      margin-bottom: 32px;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin: 16px 0 8px;
+    }
+    .stat {
+      background: #f8f9fb;
+      border: 1px solid #e2e4e9;
+      border-radius: 6px;
+      padding: 12px 14px;
+    }
+    .stat-warning { background: #fff7e8; border-color: #f0dca3; }
+    .stat-label { font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.03em; }
+    .stat-value { font-size: 22px; font-weight: 600; margin-top: 2px; }
+    .stat-sub { font-size: 12px; color: #6b7280; margin-top: 2px; }
+    table { border-collapse: collapse; width: 100%; margin: 8px 0 4px; font-size: 13px; }
+    table.breakdown { max-width: 420px; }
+    th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid #e9eaee; vertical-align: top; }
+    th { background: #f0f1f4; font-size: 12px; text-transform: uppercase; letter-spacing: 0.02em; color: #4b4f58; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    tr:nth-child(even) td { background: #fafbfc; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; }
+    .label-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      background: #eef0f4;
+      color: #33363d;
+      white-space: nowrap;
+    }
+    .label-orphan_refund, .label-double_refund { background: #fde2e1; color: #8a1c1c; }
+    .label-over_refund, .label-no_refund { background: #fdf1cf; color: #7a5b00; }
+    .label-unknown_pattern { background: #e6e8ee; color: #383c46; }
+    .label-partial, .label-delayed { background: #e4edfb; color: #1a4d8f; }
+    .label-clean_match { background: #dcf5e3; color: #185c33; }
+    .fallback-tag {
+      display: inline-block;
+      margin-left: 6px;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      background: #e6e8ee;
+      color: #4b4f58;
+    }
+    .triage-summary { color: #4b4f58; font-size: 13px; margin: 0 0 4px; }
+    .empty { color: #6b7280; font-style: italic; }
+"""
+
+
+def render_html_report(dataset_reports) -> str:
+    """dataset_reports: list of (name, results, score, triage_summary)
+    tuples, one per dataset actually run this invocation."""
+    sections = "\n".join(
+        render_dataset_section(name, results, score, triage_summary)
+        for name, results, score, triage_summary in dataset_reports
+    )
+    generated_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Refund Reconciliation Report</title>
+<style>{REPORT_CSS}</style>
+</head>
+<body>
+  <h1>Refund Reconciliation Report</h1>
+  <p class="generated">Generated {generated_at}</p>
+{sections}
+</body>
+</html>
+"""
+
+
 def run_dataset(name: str):
     cfg = DATASETS[name]
     results = run_pipeline(cfg["crm"], cfg["gateway"])
@@ -595,7 +851,7 @@ def run_dataset(name: str):
     print("#" * 72 + "\n")
     print_report(results, score, triage_summary)
 
-    return score
+    return results, score, triage_summary
 
 
 def main():
@@ -608,16 +864,21 @@ def main():
     args = parser.parse_args()
 
     names = ["main", "holdout"] if args.dataset == "both" else [args.dataset]
-    scores = {name: run_dataset(name) for name in names}
+    runs = {name: run_dataset(name) for name in names}
 
     if len(names) > 1:
         print("=" * 72)
         print("ACCURACY SUMMARY (each dataset scored independently)")
         print("=" * 72)
         for name in names:
-            s = scores[name]
+            _, s, _ = runs[name]
             print(f"  {DATASETS[name]['display_name']:<30} {s['correct']}/{s['total']} ({s['accuracy'] * 100:.1f}%)")
         print()
+
+    # HTML report -- written after the terminal report above, which stays
+    # exactly as it was; this is purely additive.
+    dataset_reports = [(name, *runs[name]) for name in names]
+    REPORT_HTML_PATH.write_text(render_html_report(dataset_reports), encoding="utf-8")
 
 
 if __name__ == "__main__":

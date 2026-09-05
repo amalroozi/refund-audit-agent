@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Refund Reconciliation Report</title>
+<style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 32px 40px 64px;
+      background: #f4f5f7;
+      color: #1a1d23;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      line-height: 1.45;
+    }
+    h1 { font-size: 22px; margin: 0 0 4px; }
+    .generated { color: #6b7280; font-size: 13px; margin: 0 0 28px; }
+    h2 { font-size: 18px; border-bottom: 2px solid #1a1d23; padding-bottom: 6px; margin-top: 0; }
+    h3 { font-size: 15px; margin: 24px 0 8px; color: #2a2e37; }
+    h4.severity-heading { font-size: 14px; margin: 18px 0 6px; padding: 4px 10px; border-radius: 4px; display: inline-block; }
+    .severity-critical { background: #fde2e1; color: #8a1c1c; }
+    .severity-needs_review { background: #fdf1cf; color: #7a5b00; }
+    .severity-explained { background: #dcf5e3; color: #185c33; }
+    section.dataset {
+      background: #ffffff;
+      border: 1px solid #e2e4e9;
+      border-radius: 8px;
+      padding: 24px 28px;
+      margin-bottom: 32px;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin: 16px 0 8px;
+    }
+    .stat {
+      background: #f8f9fb;
+      border: 1px solid #e2e4e9;
+      border-radius: 6px;
+      padding: 12px 14px;
+    }
+    .stat-warning { background: #fff7e8; border-color: #f0dca3; }
+    .stat-label { font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.03em; }
+    .stat-value { font-size: 22px; font-weight: 600; margin-top: 2px; }
+    .stat-sub { font-size: 12px; color: #6b7280; margin-top: 2px; }
+    table { border-collapse: collapse; width: 100%; margin: 8px 0 4px; font-size: 13px; }
+    table.breakdown { max-width: 420px; }
+    th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid #e9eaee; vertical-align: top; }
+    th { background: #f0f1f4; font-size: 12px; text-transform: uppercase; letter-spacing: 0.02em; color: #4b4f58; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    tr:nth-child(even) td { background: #fafbfc; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; }
+    .label-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      background: #eef0f4;
+      color: #33363d;
+      white-space: nowrap;
+    }
+    .label-orphan_refund, .label-double_refund { background: #fde2e1; color: #8a1c1c; }
+    .label-over_refund, .label-no_refund { background: #fdf1cf; color: #7a5b00; }
+    .label-unknown_pattern { background: #e6e8ee; color: #383c46; }
+    .label-partial, .label-delayed { background: #e4edfb; color: #1a4d8f; }
+    .label-clean_match { background: #dcf5e3; color: #185c33; }
+    .fallback-tag {
+      display: inline-block;
+      margin-left: 6px;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      background: #e6e8ee;
+      color: #4b4f58;
+    }
+    .triage-summary { color: #4b4f58; font-size: 13px; margin: 0 0 4px; }
+    .empty { color: #6b7280; font-style: italic; }
+</style>
+</head>
+<body>
+  <h1>Refund Reconciliation Report</h1>
+  <p class="generated">Generated 2026-09-05 23:50:36</p>
+
+  <section class="dataset">
+    <h2>MAIN SYNTHETIC DATASET</h2>
+
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="stat-label">Total cases</div>
+        <div class="stat-value">65</div>
+        <div class="stat-sub">65 CRM-promised + 0 gateway-only orphans</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Clean match rate</div>
+        <div class="stat-value">38/65</div>
+        <div class="stat-sub">58.5%</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Accuracy vs ground truth</div>
+        <div class="stat-value">65/65</div>
+        <div class="stat-sub">100.0%</div>
+      </div>
+      <div class="stat stat-warning">
+        <div class="stat-label">Promised but not refunded</div>
+        <div class="stat-value">₹37,765.27</div>
+        <div class="stat-sub">summed across every case still short</div>
+      </div>
+    </div>
+
+    <h3>Category breakdown</h3>
+    <table class="breakdown">
+      <thead><tr><th>Category</th><th>Count</th><th>%</th></tr></thead>
+      <tbody>
+<tr><td><span class="label-badge label-clean_match">clean_match</span></td><td class="num">38</td><td class="num">58.5%</td></tr>
+<tr><td><span class="label-badge label-partial">partial</span></td><td class="num">10</td><td class="num">15.4%</td></tr>
+<tr><td><span class="label-badge label-over_refund">over_refund</span></td><td class="num">0</td><td class="num">0.0%</td></tr>
+<tr><td><span class="label-badge label-delayed">delayed</span></td><td class="num">7</td><td class="num">10.8%</td></tr>
+<tr><td><span class="label-badge label-no_refund">no_refund</span></td><td class="num">10</td><td class="num">15.4%</td></tr>
+<tr><td><span class="label-badge label-double_refund">double_refund</span></td><td class="num">0</td><td class="num">0.0%</td></tr>
+<tr><td><span class="label-badge label-orphan_refund">orphan_refund</span></td><td class="num">0</td><td class="num">0.0%</td></tr>
+<tr><td><span class="label-badge label-unknown_pattern">unknown_pattern</span></td><td class="num">0</td><td class="num">0.0%</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Exceptions (27), grouped by AI severity</h3>
+    <p class="triage-summary">
+      15 critical &middot;
+      5 explained &middot;
+      7 need review
+      &mdash; 4/27 defaulted to
+      needs_review via fallback (no note logged, API failure, bad JSON, or low confidence).
+    </p>
+
+      <h4 class="severity-heading severity-critical">Critical (15)</h4>
+      <table class="exceptions">
+        <thead>
+          <tr>
+            <th>Promise ID</th><th>Order ID</th><th>Label</th>
+            <th>Promised</th><th>Refunded</th><th>Rule reason</th>
+            <th>AI justification</th><th>Confidence</th>
+          </tr>
+        </thead>
+        <tbody>
+<tr><td class="mono">PRM-200002</td><td class="mono">ORD100002</td><td><span class="label-badge label-no_refund">no_refund</span></td><td class="num">₹4,999.00</td><td class="num">—</td><td>CRM promised ₹4999 refund on 2026-07-07 for order ORD100002, but no matching gateway transaction was found</td><td>The agent note states a partial refund was approved, yet the system shows no refund transaction at all, indicating a contradiction.</td><td class="num">0.90</td></tr>
+<tr><td class="mono">PRM-200008</td><td class="mono">ORD100008</td><td><span class="label-badge label-no_refund">no_refund</span></td><td class="num">₹299.00</td><td class="num">—</td><td>CRM promised ₹299 refund on 2026-07-05 for order ORD100008, but no matching gateway transaction was found</td><td>Agent note states refund approved but no gateway transaction was found for the $299.00 promised amount, indicating a missing refund.</td><td class="num">0.90</td></tr>
+<tr><td class="mono">PRM-200026</td><td class="mono">ORD100026</td><td><span class="label-badge label-no_refund">no_refund</span></td><td class="num">₹14,999.50</td><td class="num">—</td><td>CRM promised ₹15000 refund on 2026-07-12 for order ORD100026, but no matching gateway transaction was found</td><td>The agent note states the refund was approved but there is no gateway transaction, leaving a $14,999.50 refund missing with no explanation</td><td class="num">0.95</td></tr>
+<tr><td class="mono">PRM-200029</td><td class="mono">ORD100029</td><td><span class="label-badge label-no_refund">no_refund</span></td><td class="num">₹8,000.00</td><td class="num">—</td><td>CRM promised ₹8000 refund on 2026-07-31 for order ORD100029, but no matching gateway transaction was found</td><td>Agent note states the refund was approved, yet no gateway transaction exists for the promised $8000, indicating a missing refund without explanation.</td><td class="num">0.95</td></tr>
+<tr><td class="mono">PRM-200031</td><td class="mono">ORD100031</td><td><span class="label-badge label-no_refund">no_refund</span></td><td class="num">₹500.00</td><td class="num">—</td><td>CRM promised ₹500 refund on 2026-07-16 for order ORD100031, but no matching gateway transaction was found</td><td>Agent note indicates refund approved as goodwill, yet no gateway transaction is present</td><td class="num">0.85</td></tr>
+<tr><td class="mono">PRM-200036</td><td class="mono">ORD100036</td><td><span class="label-badge label-no_refund">no_refund</span></td><td class="num">₹1,999.00</td><td class="num">—</td><td>CRM promised ₹1999 refund on 2026-06-25 for order ORD100036, but no matching gateway transaction was found</td><td>Agent note states refund was approved to close ticket, yet no refund transaction exists</td><td class="num">0.95</td></tr>
+<tr><td class="mono">PRM-200046</td><td class="mono">ORD100046</td><td><span class="label-badge label-no_refund">no_refund</span></td><td class="num">₹499.00</td><td class="num">—</td><td>CRM promised ₹499 refund on 2026-08-02 for order ORD100046, but no matching gateway transaction was found</td><td>Agent note indicates a partial refund was approved, yet the system shows no refund transaction for the promised amount.</td><td class="num">0.95</td></tr>
+<tr><td class="mono">PRM-200055</td><td class="mono">ORD100055</td><td><span class="label-badge label-no_refund">no_refund</span></td><td class="num">₹3,499.00</td><td class="num">—</td><td>CRM promised ₹3499 refund on 2026-08-03 for order ORD100055, but no matching gateway transaction was found</td><td>The agent note indicates a refund was approved as goodwill, yet no refund transaction exists, contradicting the promised action</td><td class="num">0.90</td></tr>
+<tr><td class="mono">PRM-200060</td><td class="mono">ORD100060</td><td><span class="label-badge label-no_refund">no_refund</span></td><td class="num">₹799.00</td><td class="num">—</td><td>CRM promised ₹799 refund on 2026-07-30 for order ORD100060, but no matching gateway transaction was found</td><td>The agent note states a partial refund was approved, yet no gateway transaction is present for a promised $799.00 amount.</td><td class="num">0.95</td></tr>
+<tr><td class="mono">PRM-200005</td><td class="mono">ORD100005</td><td><span class="label-badge label-partial">partial</span></td><td class="num">₹12,999.00</td><td class="num">₹12,609.03</td><td>Promised ₹12999, gateway shows ₹12609 — ₹390 short (~3.0%), no matching fee schedule provided</td><td>The agent note only states that the refund was approved due to a damaged item, but does not explain why the refunded amount (12609.03) is lower than the promised amount (12999.00).</td><td class="num">0.95</td></tr>
+<tr><td class="mono">PRM-200038</td><td class="mono">ORD100038</td><td><span class="label-badge label-partial">partial</span></td><td class="num">₹4,999.00</td><td class="num">₹4,849.03</td><td>Promised ₹4999, gateway shows ₹4849 — ₹150 short (~3.0%), no matching fee schedule provided</td><td>Agent note indicates goodwill refund but does not explain the 149.97 shortfall from the promised 4999.00</td><td class="num">0.90</td></tr>
+<tr><td class="mono">PRM-200009</td><td class="mono">ORD100009</td><td><span class="label-badge label-delayed">delayed</span></td><td class="num">₹799.00</td><td class="num">₹799.00</td><td>Refund of ₹799 processed on 2026-08-05, 24 day(s) past the promised 10-day deadline (2026-07-12)</td><td>Agent note states a partial refund was approved, yet the refunded amount matches the full promised amount, indicating a contradiction.</td><td class="num">0.90</td></tr>
+<tr><td class="mono">PRM-200033</td><td class="mono">ORD100033</td><td><span class="label-badge label-delayed">delayed</span></td><td class="num">₹799.99</td><td class="num">₹799.99</td><td>Refund of ₹800 processed on 2026-06-29, 14 day(s) past the promised 6-day deadline (2026-06-15)</td><td>Agent note says “Approved partial refund per manager discretion” but the refunded amount matches the promised full amount, showing a contradiction in the record</td><td class="num">0.90</td></tr>
+<tr><td class="mono">PRM-200040</td><td class="mono">ORD100040</td><td><span class="label-badge label-delayed">delayed</span></td><td class="num">₹299.00</td><td class="num">₹299.00</td><td>Refund of ₹299 processed on 2026-09-01, 17 day(s) past the promised 7-day deadline (2026-08-15)</td><td>Agent note states a partial refund was approved, yet the full promised amount was refunded</td><td class="num">0.95</td></tr>
+<tr><td class="mono">PRM-200048</td><td class="mono">ORD100048</td><td><span class="label-badge label-delayed">delayed</span></td><td class="num">₹12,999.00</td><td class="num">₹12,999.00</td><td>Refund of ₹12999 processed on 2026-07-05, 12 day(s) past the promised 9-day deadline (2026-06-23)</td><td>The agent note only states that the refund was approved per return policy after inspection, offering no explanation for the 21‑day delay beyond the promised 7‑9‑day window.</td><td class="num">0.95</td></tr>
+        </tbody>
+      </table>
+
+      <h4 class="severity-heading severity-needs_review">Needs Review (7)</h4>
+      <table class="exceptions">
+        <thead>
+          <tr>
+            <th>Promise ID</th><th>Order ID</th><th>Label</th>
+            <th>Promised</th><th>Refunded</th><th>Rule reason</th>
+            <th>AI justification</th><th>Confidence</th>
+          </tr>
+        </thead>
+        <tbody>
+<tr><td class="mono">PRM-200001</td><td class="mono">ORD100001</td><td><span class="label-badge label-partial">partial</span></td><td class="num">₹2,499.00</td><td class="num">₹2,424.03</td><td>Promised ₹2499, gateway shows ₹2424 — ₹75 short (~3.0%), no matching fee schedule provided</td><td>The agent note mentions a duplicate charge and billing approval but does not explain the shortfall between promised and refunded amounts.</td><td class="num">0.85</td></tr>
+<tr><td class="mono">PRM-200018</td><td class="mono">ORD100018</td><td><span class="label-badge label-partial">partial</span></td><td class="num">₹5,999.00</td><td class="num">₹5,819.03</td><td>Promised ₹5999, gateway shows ₹5819 — ₹180 short (~3.0%), no matching fee schedule provided</td><td>Agent note does not explain why the refund amount is lower than the promised amount, only mentions a duplicate charge and approval by billing team.</td><td class="num">0.65</td></tr>
+<tr><td class="mono">PRM-200024</td><td class="mono">ORD100024</td><td><span class="label-badge label-partial">partial</span></td><td class="num">₹2,500.00</td><td class="num">₹2,425.00</td><td>Promised ₹2500, gateway shows ₹2425 — ₹75 short (~3.0%), no matching fee schedule provided</td><td>PRM-200024: no agent_notes logged <span class="fallback-tag">AI FALLBACK</span></td><td class="num">n/a</td></tr>
+<tr><td class="mono">PRM-200044</td><td class="mono">ORD100044</td><td><span class="label-badge label-partial">partial</span></td><td class="num">₹299.50</td><td class="num">₹290.52</td><td>Promised ₹300, gateway shows ₹291 — ₹9 short (~3.0%), no matching fee schedule provided</td><td>PRM-200044: no agent_notes logged <span class="fallback-tag">AI FALLBACK</span></td><td class="num">n/a</td></tr>
+<tr><td class="mono">PRM-200063</td><td class="mono">ORD100063</td><td><span class="label-badge label-partial">partial</span></td><td class="num">₹2,999.00</td><td class="num">₹2,909.03</td><td>Promised ₹2999, gateway shows ₹2909 — ₹90 short (~3.0%), no matching fee schedule provided</td><td>PRM-200063: no agent_notes logged <span class="fallback-tag">AI FALLBACK</span></td><td class="num">n/a</td></tr>
+<tr><td class="mono">PRM-200017</td><td class="mono">ORD100017</td><td><span class="label-badge label-delayed">delayed</span></td><td class="num">₹12,999.99</td><td class="num">₹12,999.99</td><td>Refund of ₹13000 processed on 2026-09-05, 11 day(s) past the promised 10-day deadline (2026-08-25)</td><td>PRM-200017: no agent_notes logged <span class="fallback-tag">AI FALLBACK</span></td><td class="num">n/a</td></tr>
+<tr><td class="mono">PRM-200043</td><td class="mono">ORD100043</td><td><span class="label-badge label-delayed">delayed</span></td><td class="num">₹2,999.00</td><td class="num">₹2,999.00</td><td>Refund of ₹2999 processed on 2026-08-12, 12 day(s) past the promised 5-day deadline (2026-07-31)</td><td>The agent note states the refund was approved, but it does not explain the 17‑day delay between promise and refund processing.</td><td class="num">0.70</td></tr>
+        </tbody>
+      </table>
+
+      <h4 class="severity-heading severity-explained">Explained (5)</h4>
+      <table class="exceptions">
+        <thead>
+          <tr>
+            <th>Promise ID</th><th>Order ID</th><th>Label</th>
+            <th>Promised</th><th>Refunded</th><th>Rule reason</th>
+            <th>AI justification</th><th>Confidence</th>
+          </tr>
+        </thead>
+        <tbody>
+<tr><td class="mono">PRM-200058</td><td class="mono">ORD100058</td><td><span class="label-badge label-no_refund">no_refund</span></td><td class="num">₹999.00</td><td class="num">—</td><td>CRM promised ₹999 refund on 2026-06-27 for order ORD100058, but no matching gateway transaction was found</td><td>The agent note states that the refund was approved due to a damaged item, which explains why no gateway transaction appears.</td><td class="num">0.99</td></tr>
+<tr><td class="mono">PRM-200006</td><td class="mono">ORD100006</td><td><span class="label-badge label-partial">partial</span></td><td class="num">₹799.00</td><td class="num">₹775.03</td><td>Promised ₹799, gateway shows ₹775 — ₹24 short (~3.0%), no matching fee schedule provided</td><td>Agent note states refund approved as goodwill, explaining the partial refund amount.</td><td class="num">0.90</td></tr>
+<tr><td class="mono">PRM-200013</td><td class="mono">ORD100013</td><td><span class="label-badge label-partial">partial</span></td><td class="num">₹2,499.99</td><td class="num">₹2,424.99</td><td>Promised ₹2500, gateway shows ₹2425 — ₹75 short (~3.0%), no matching fee schedule provided</td><td>The agent note states the refund was approved as partial per manager discretion, matching the reduced refunded amount.</td><td class="num">0.95</td></tr>
+<tr><td class="mono">PRM-200056</td><td class="mono">ORD100056</td><td><span class="label-badge label-partial">partial</span></td><td class="num">₹3,499.00</td><td class="num">₹3,394.03</td><td>Promised ₹3499, gateway shows ₹3394 — ₹105 short (~3.0%), no matching fee schedule provided</td><td>Agent note explains goodwill refund for wrong item, matching the partial refund</td><td class="num">0.99</td></tr>
+<tr><td class="mono">PRM-200025</td><td class="mono">ORD100025</td><td><span class="label-badge label-delayed">delayed</span></td><td class="num">₹199.00</td><td class="num">₹199.00</td><td>Refund of ₹199 processed on 2026-08-16, 15 day(s) past the promised 7-day deadline (2026-08-01)</td><td>The agent note confirms the refund was approved for a damaged item, matching the refunded amount of 199.00.</td><td class="num">0.99</td></tr>
+        </tbody>
+      </table>
+  </section>
+
+  <section class="dataset">
+    <h2>HOLD-OUT ADVERSARIAL BATCH</h2>
+
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="stat-label">Total cases</div>
+        <div class="stat-value">40</div>
+        <div class="stat-sub">34 CRM-promised + 6 gateway-only orphans</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Clean match rate</div>
+        <div class="stat-value">9/40</div>
+        <div class="stat-sub">22.5%</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Accuracy vs ground truth</div>
+        <div class="stat-value">40/40</div>
+        <div class="stat-sub">100.0%</div>
+      </div>
+      <div class="stat stat-warning">
+        <div class="stat-label">Promised but not refunded</div>
+        <div class="stat-value">₹9,885.91</div>
+        <div class="stat-sub">summed across every case still short</div>
+      </div>
+    </div>
+
+    <h3>Category breakdown</h3>
+    <table class="breakdown">
+      <thead><tr><th>Category</th><th>Count</th><th>%</th></tr></thead>
+      <tbody>
+<tr><td><span class="label-badge label-clean_match">clean_match</span></td><td class="num">9</td><td class="num">22.5%</td></tr>
+<tr><td><span class="label-badge label-partial">partial</span></td><td class="num">3</td><td class="num">7.5%</td></tr>
+<tr><td><span class="label-badge label-over_refund">over_refund</span></td><td class="num">6</td><td class="num">15.0%</td></tr>
+<tr><td><span class="label-badge label-delayed">delayed</span></td><td class="num">4</td><td class="num">10.0%</td></tr>
+<tr><td><span class="label-badge label-no_refund">no_refund</span></td><td class="num">3</td><td class="num">7.5%</td></tr>
+<tr><td><span class="label-badge label-double_refund">double_refund</span></td><td class="num">6</td><td class="num">15.0%</td></tr>
+<tr><td><span class="label-badge label-orphan_refund">orphan_refund</span></td><td class="num">6</td><td class="num">15.0%</td></tr>
+<tr><td><span class="label-badge label-unknown_pattern">unknown_pattern</span></td><td class="num">3</td><td class="num">7.5%</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Exceptions (31), grouped by AI severity</h3>
+    <p class="triage-summary">
+      11 critical &middot;
+      5 explained &middot;
+      15 need review
+      &mdash; 13/31 defaulted to
+      needs_review via fallback (no note logged, API failure, bad JSON, or low confidence).
+    </p>
+
+      <h4 class="severity-heading severity-critical">Critical (11)</h4>
+      <table class="exceptions">
+        <thead>
+          <tr>
+            <th>Promise ID</th><th>Order ID</th><th>Label</th>
+            <th>Promised</th><th>Refunded</th><th>Rule reason</th>
+            <th>AI justification</th><th>Confidence</th>
+          </tr>
+        </thead>
+        <tbody>
+<tr><td class="mono">HPRM-600012</td><td class="mono">HORD600012</td><td><span class="label-badge label-double_refund">double_refund</span></td><td class="num">₹1,499.00</td><td class="num">₹2,998.00</td><td>2 gateway transactions found for order HORD600012 (₹1499, ₹1499), totaling ₹2998 — expected exactly one refund per promise, not summed automatically</td><td>Agent note does not explain the double refund of 2998.00 for a promised 1499.00, indicating a discrepancy without clarification.</td><td class="num">0.90</td></tr>
+<tr><td class="mono">HPRM-600013</td><td class="mono">HORD600013</td><td><span class="label-badge label-double_refund">double_refund</span></td><td class="num">₹3,499.00</td><td class="num">₹6,998.00</td><td>2 gateway transactions found for order HORD600013 (₹3499, ₹3499), totaling ₹6998 — expected exactly one refund per promise, not summed automatically</td><td>The agent note mentions a refund approval for a defective item but does not explain the doubled amount of 6998 versus the promised 3499, indicating a possible discrepancy.</td><td class="num">0.90</td></tr>
+<tr><td class="mono">HPRM-600014</td><td class="mono">HORD600014</td><td><span class="label-badge label-double_refund">double_refund</span></td><td class="num">₹6,999.00</td><td class="num">₹13,998.00</td><td>2 gateway transactions found for order HORD600014 (₹6999, ₹6999), totaling ₹13998 — expected exactly one refund per promise, not summed automatically</td><td>The agent note does not explain the doubled refund amount of 13998.00 versus the promised 6999.00.</td><td class="num">0.92</td></tr>
+<tr><td class="mono">HPRM-600015</td><td class="mono">HORD600015</td><td><span class="label-badge label-double_refund">double_refund</span></td><td class="num">₹2,000.00</td><td class="num">₹2,000.00</td><td>2 gateway transactions found for order HORD600015 (₹1000, ₹1000), totaling ₹2000 — expected exactly one refund per promise, not summed automatically</td><td>The agent note only states an approved refund but does not explain a double refund, and the system flagged a double_refund discrepancy.</td><td class="num">0.90</td></tr>
+<tr><td class="mono">HPRM-600016</td><td class="mono">HORD600016</td><td><span class="label-badge label-double_refund">double_refund</span></td><td class="num">₹5,000.00</td><td class="num">₹5,000.00</td><td>2 gateway transactions found for order HORD600016 (₹2500, ₹2500), totaling ₹5000 — expected exactly one refund per promise, not summed automatically</td><td>The agent note states &quot;Approved refund - order cancelled before shipment&quot; but the rule has flagged a double refund with no explanation in the note, and the amount of 5000.00 is significant.</td><td class="num">0.90</td></tr>
+<tr><td class="mono">HPRM-600018</td><td class="mono">HORD600018</td><td><span class="label-badge label-over_refund">over_refund</span></td><td class="num">₹999.00</td><td class="num">₹1,099.00</td><td>Promised ₹999, gateway shows ₹1099 — ₹100 over (~10.0%), refunded more than was promised</td><td>Agent note does not explain the 100.00 over-refund, contradicting the promised amount of 999.00</td><td class="num">0.95</td></tr>
+<tr><td class="mono">HPRM-600021</td><td class="mono">HORD600021</td><td><span class="label-badge label-over_refund">over_refund</span></td><td class="num">₹4,999.00</td><td class="num">₹5,999.00</td><td>Promised ₹4999, gateway shows ₹5999 — ₹1000 over (~20.0%), refunded more than was promised</td><td>Agent note does not explain why a $1,000 over-refund was issued</td><td class="num">0.90</td></tr>
+<tr><td class="mono">HPRM-600022</td><td class="mono">HORD600022</td><td><span class="label-badge label-over_refund">over_refund</span></td><td class="num">₹999.00</td><td class="num">₹1,998.00</td><td>Promised ₹999, gateway shows ₹1998 — ₹999 over (~100.0%), refunded more than was promised</td><td>The agent note only states the refund was approved after inspection, but does not explain the double refund of 1998 when 999 was promised.</td><td class="num">0.95</td></tr>
+<tr><td class="mono">HPRM-600023</td><td class="mono">HORD600023</td><td><span class="label-badge label-over_refund">over_refund</span></td><td class="num">₹7,999.00</td><td class="num">₹8,399.00</td><td>Promised ₹7999, gateway shows ₹8399 — ₹400 over (~5.0%), refunded more than was promised</td><td>The agent note only states the refund was approved to close the ticket and does not explain the over‑refund of 400.00.</td><td class="num">0.90</td></tr>
+<tr><td class="mono">HPRM-600009</td><td class="mono">HORD600009</td><td><span class="label-badge label-no_refund">no_refund</span></td><td class="num">₹799.00</td><td class="num">—</td><td>CRM promised ₹799 refund on 2026-07-08 for order HORD600009, but no matching gateway transaction was found</td><td>Agent note states refund was approved but no gateway transaction was recorded, a clear contradiction.</td><td class="num">0.95</td></tr>
+<tr><td class="mono">HPRM-600011</td><td class="mono">HORD600011</td><td><span class="label-badge label-no_refund">no_refund</span></td><td class="num">₹5,999.00</td><td class="num">—</td><td>CRM promised ₹5999 refund on 2026-07-08 for order HORD600011, but no matching gateway transaction was found</td><td>Agent note states the refund was approved, yet the gateway shows no transaction, contradicting the promised refund of 5999.00</td><td class="num">0.90</td></tr>
+        </tbody>
+      </table>
+
+      <h4 class="severity-heading severity-needs_review">Needs Review (15)</h4>
+      <table class="exceptions">
+        <thead>
+          <tr>
+            <th>Promise ID</th><th>Order ID</th><th>Label</th>
+            <th>Promised</th><th>Refunded</th><th>Rule reason</th>
+            <th>AI justification</th><th>Confidence</th>
+          </tr>
+        </thead>
+        <tbody>
+<tr><td class="mono">ORPHAN-600024</td><td class="mono">horder_600024</td><td><span class="label-badge label-orphan_refund">orphan_refund</span></td><td class="num">—</td><td class="num">₹499.00</td><td>Gateway shows 1 refund(s) (₹499, totaling ₹499) on 2026-07-12 for order horder_600024, but no CRM promise exists for this order at all</td><td>ORPHAN-600024: no agent_notes logged <span class="fallback-tag">AI FALLBACK</span></td><td class="num">n/a</td></tr>
+<tr><td class="mono">ORPHAN-600025</td><td class="mono">horder_600025</td><td><span class="label-badge label-orphan_refund">orphan_refund</span></td><td class="num">—</td><td class="num">₹1,299.00</td><td>Gateway shows 1 refund(s) (₹1299, totaling ₹1299) on 2026-07-12 for order horder_600025, but no CRM promise exists for this order at all</td><td>ORPHAN-600025: no agent_notes logged <span class="fallback-tag">AI FALLBACK</span></td><td class="num">n/a</td></tr>
+<tr><td class="mono">ORPHAN-600026</td><td class="mono">horder_600026</td><td><span class="label-badge label-orphan_refund">orphan_refund</span></td><td class="num">—</td><td class="num">₹2,599.00</td><td>Gateway shows 1 refund(s) (₹2599, totaling ₹2599) on 2026-07-30 for order horder_600026, but no CRM promise exists for this order at all</td><td>ORPHAN-600026: no agent_notes logged <span class="fallback-tag">AI FALLBACK</span></td><td class="num">n/a</td></tr>
+<tr><td class="mono">ORPHAN-600027</td><td class="mono">horder_600027</td><td><span class="label-badge label-orphan_refund">orphan_refund</span></td><td class="num">—</td><td class="num">₹3,999.00</td><td>Gateway shows 1 refund(s) (₹3999, totaling ₹3999) on 2026-07-12 for order horder_600027, but no CRM promise exists for this order at all</td><td>ORPHAN-600027: no agent_notes logged <span class="fallback-tag">AI FALLBACK</span></td><td class="num">n/a</td></tr>
+<tr><td class="mono">ORPHAN-600028</td><td class="mono">horder_600028</td><td><span class="label-badge label-orphan_refund">orphan_refund</span></td><td class="num">—</td><td class="num">₹6,499.00</td><td>Gateway shows 1 refund(s) (₹6499, totaling ₹6499) on 2026-07-17 for order horder_600028, but no CRM promise exists for this order at all</td><td>ORPHAN-600028: no agent_notes logged <span class="fallback-tag">AI FALLBACK</span></td><td class="num">n/a</td></tr>
+<tr><td class="mono">ORPHAN-600029</td><td class="mono">horder_600029</td><td><span class="label-badge label-orphan_refund">orphan_refund</span></td><td class="num">—</td><td class="num">₹8,999.00</td><td>Gateway shows 1 refund(s) (₹8999, totaling ₹8999) on 2026-08-01 for order horder_600029, but no CRM promise exists for this order at all</td><td>ORPHAN-600029: no agent_notes logged <span class="fallback-tag">AI FALLBACK</span></td><td class="num">n/a</td></tr>
+<tr><td class="mono">HPRM-600019</td><td class="mono">HORD600019</td><td><span class="label-badge label-over_refund">over_refund</span></td><td class="num">₹1,999.00</td><td class="num">₹2,299.00</td><td>Promised ₹1999, gateway shows ₹2299 — ₹300 over (~15.0%), refunded more than was promised</td><td>HPRM-600019: no agent_notes logged <span class="fallback-tag">AI FALLBACK</span></td><td class="num">n/a</td></tr>
+<tr><td class="mono">HPRM-600020</td><td class="mono">HORD600020</td><td><span class="label-badge label-over_refund">over_refund</span></td><td class="num">₹2,999.00</td><td class="num">₹3,299.00</td><td>Promised ₹2999, gateway shows ₹3299 — ₹300 over (~10.0%), refunded more than was promised</td><td>The agent note states &quot;Refund approved per return policy after inspection&quot; but does not explain the 300.00 over-refund, so the discrepancy remains unclear.</td><td class="num">0.85</td></tr>
+<tr><td class="mono">HPRM-600010</td><td class="mono">HORD600010</td><td><span class="label-badge label-no_refund">no_refund</span></td><td class="num">₹2,499.00</td><td class="num">—</td><td>CRM promised ₹2499 refund on 2026-07-08 for order HORD600010, but no matching gateway transaction was found</td><td>HPRM-600010: no agent_notes logged <span class="fallback-tag">AI FALLBACK</span></td><td class="num">n/a</td></tr>
+<tr><td class="mono">HPRM-600038</td><td class="mono">HORD600038</td><td><span class="label-badge label-unknown_pattern">unknown_pattern</span></td><td class="num">₹2,999.00</td><td class="num">₹2,949.00</td><td>Promised ₹2999, gateway shows ₹2949 — ₹50 short (~1.7%): too large to be rounding/formatting noise, too small to confidently call a deliberate deduction or overpayment -- abstaining rather than forcing a label</td><td>HPRM-600038: no agent_notes logged <span class="fallback-tag">AI FALLBACK</span></td><td class="num">n/a</td></tr>
+<tr><td class="mono">HPRM-600039</td><td class="mono">HORD600039</td><td><span class="label-badge label-unknown_pattern">unknown_pattern</span></td><td class="num">₹1,499.00</td><td class="num">₹1,470.00</td><td>Promised ₹1499, gateway shows ₹1470 — ₹29 short (~1.9%): too large to be rounding/formatting noise, too small to confidently call a deliberate deduction or overpayment -- abstaining rather than forcing a label</td><td>HPRM-600039: no agent_notes logged <span class="fallback-tag">AI FALLBACK</span></td><td class="num">n/a</td></tr>
+<tr><td class="mono">HPRM-600040</td><td class="mono">HORD600040</td><td><span class="label-badge label-unknown_pattern">unknown_pattern</span></td><td class="num">₹4,999.00</td><td class="num">₹5,074.00</td><td>Promised ₹4999, gateway shows ₹5074 — ₹75 over (~1.5%): too large to be rounding/formatting noise, too small to confidently call a deliberate deduction or overpayment -- abstaining rather than forcing a label</td><td>HPRM-600040: no agent_notes logged <span class="fallback-tag">AI FALLBACK</span></td><td class="num">n/a</td></tr>
+<tr><td class="mono">HPRM-600034</td><td class="mono">HORD600034</td><td><span class="label-badge label-delayed">delayed</span></td><td class="num">₹5,999.00</td><td class="num">₹5,999.00</td><td>Refund of ₹5999 processed on 2026-05-05, 2 day(s) past the promised 5-day deadline (2026-05-03)</td><td>HPRM-600034: no agent_notes logged <span class="fallback-tag">AI FALLBACK</span></td><td class="num">n/a</td></tr>
+<tr><td class="mono">HPRM-600035</td><td class="mono">HORD600035</td><td><span class="label-badge label-delayed">delayed</span></td><td class="num">₹799.00</td><td class="num">₹799.00</td><td>Refund of ₹799 processed on 2026-06-10, 5 day(s) past the promised 7-day deadline (2026-06-05)</td><td>No agent note explains the delay beyond the standard approved reason.</td><td class="num">0.85</td></tr>
+<tr><td class="mono">HPRM-600037</td><td class="mono">HORD600037</td><td><span class="label-badge label-delayed">delayed</span></td><td class="num">₹3,999.00</td><td class="num">₹3,999.00</td><td>Refund of ₹3999 processed on 2026-04-13, 7 day(s) past the promised 7-day deadline (2026-04-06)</td><td>HPRM-600037: no agent_notes logged <span class="fallback-tag">AI FALLBACK</span></td><td class="num">n/a</td></tr>
+        </tbody>
+      </table>
+
+      <h4 class="severity-heading severity-explained">Explained (5)</h4>
+      <table class="exceptions">
+        <thead>
+          <tr>
+            <th>Promise ID</th><th>Order ID</th><th>Label</th>
+            <th>Promised</th><th>Refunded</th><th>Rule reason</th>
+            <th>AI justification</th><th>Confidence</th>
+          </tr>
+        </thead>
+        <tbody>
+<tr><td class="mono">HPRM-600017</td><td class="mono">HORD600017</td><td><span class="label-badge label-double_refund">double_refund</span></td><td class="num">₹9,000.00</td><td class="num">₹9,000.00</td><td>2 gateway transactions found for order HORD600017 (₹4500, ₹4500), totaling ₹9000 — expected exactly one refund per promise, not summed automatically</td><td>Agent notes confirm the refund was approved for an order cancelled before shipment, matching the refunded amount of 9000.00.</td><td class="num">0.95</td></tr>
+<tr><td class="mono">HPRM-600006</td><td class="mono">HORD600006</td><td><span class="label-badge label-partial">partial</span></td><td class="num">₹1,999.00</td><td class="num">₹1,939.03</td><td>Promised ₹1999, gateway shows ₹1939 — ₹60 short (~3.0%), no matching fee schedule provided</td><td>The agent note states &#x27;Approved partial refund per manager discretion&#x27;, matching the shortfall in the refunded amount.</td><td class="num">0.99</td></tr>
+<tr><td class="mono">HPRM-600007</td><td class="mono">HORD600007</td><td><span class="label-badge label-partial">partial</span></td><td class="num">₹4,999.00</td><td class="num">₹4,849.03</td><td>Promised ₹4999, gateway shows ₹4849 — ₹150 short (~3.0%), no matching fee schedule provided</td><td>Agent note states “Approved partial refund per manager discretion”, matching the shortfall between promised 4999.00 and refunded 4849.03.</td><td class="num">0.95</td></tr>
+<tr><td class="mono">HPRM-600008</td><td class="mono">HORD600008</td><td><span class="label-badge label-partial">partial</span></td><td class="num">₹9,999.00</td><td class="num">₹9,699.03</td><td>Promised ₹9999, gateway shows ₹9699 — ₹300 short (~3.0%), no matching fee schedule provided</td><td>The agent note states &quot;Approved partial refund per manager discretion&quot;, matching the lower refunded amount.</td><td class="num">0.90</td></tr>
+<tr><td class="mono">HPRM-600036</td><td class="mono">HORD600036</td><td><span class="label-badge label-delayed">delayed</span></td><td class="num">₹2,499.00</td><td class="num">₹2,499.00</td><td>Refund of ₹2499 processed on 2026-07-06, 4 day(s) past the promised 5-day deadline (2026-07-02)</td><td>The agent note confirms the refund was approved and the order was cancelled before shipment, explaining why the refund, though delayed, matches the promised amount.</td><td class="num">0.95</td></tr>
+        </tbody>
+      </table>
+  </section>
+</body>
+</html>
