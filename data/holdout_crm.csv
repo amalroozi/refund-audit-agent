@@ -1,0 +1,35 @@
+promise_id,customer_id,order_id,promised_amount,promise_date,promised_window_days,agent_notes
+HPRM-600001,HCUST29772,HORD600001,999.00,2026-07-10,5-7,Customer escalation - refund approved to close ticket
+HPRM-600002,HCUST17747,HORD600002,"1,999.00",2026-07-10,5-7,Refund approved per return policy after inspection
+HPRM-600003,HCUST50433,HORD600003,2999.00,2026-07-10,5-7,
+HPRM-600004,HCUST71027,HORD600004,4999.00,2026-07-10,5-7,Customer escalation - refund approved to close ticket
+HPRM-600005,HCUST25475,HORD600005,7999.00,2026-07-10,5-7,Refund approved due to defective item
+HPRM-600006,HCUST86008,HORD600006,"1,999.00",2026-07-12,5-8,Approved partial refund per manager discretion
+HPRM-600007,HCUST55482,HORD600007,4999.00,2026-07-12,5-8,Approved partial refund per manager discretion
+HPRM-600008,HCUST75078,HORD600008,9999.00,2026-07-12,5-8,Approved partial refund per manager discretion
+HPRM-600009,HCUST96313,HORD600009,799.00,2026-07-08,5-7,Approved refund - order cancelled before shipment
+HPRM-600010,HCUST33900,HORD600010,2499.00,2026-07-08,5-7,
+HPRM-600011,HCUST80069,HORD600011,5999.00,2026-07-08,5-7,Refund approved per return policy after inspection
+HPRM-600012,HCUST26448,HORD600012,"1,499.00",2026-06-20,5-7,Refund approved due to defective item
+HPRM-600013,HCUST23299,HORD600013,"INR 3,499.00",2026-06-20,5-7,Refund approved due to defective item
+HPRM-600014,HCUST31160,HORD600014,6999.00,2026-06-20,5-7,Refund approved due to defective item
+HPRM-600015,HCUST13661,HORD600015,"2,000.00",2026-06-22,5-7,Approved refund - order cancelled before shipment
+HPRM-600016,HCUST72656,HORD600016,"INR 5,000.00",2026-06-22,5-7,Approved refund - order cancelled before shipment
+HPRM-600017,HCUST23470,HORD600017,9000.00,22-Jun-2026,5-7,Approved refund - order cancelled before shipment
+HPRM-600018,HCUST34000,HORD600018,999.00,25/06/2026,5-7,Refund approved per return policy after inspection
+HPRM-600019,HCUST17447,HORD600019,1999.00,2026-06-25,5-7,
+HPRM-600020,HCUST76552,HORD600020,"INR 2,999.00",2026-06-25,5-7,Refund approved per return policy after inspection
+HPRM-600021,HCUST19584,HORD600021,4999.00,2026-06-25,5-7,Refund approved per return policy after inspection
+HPRM-600022,HCUST31337,HORD600022,INR 999.00,25/06/2026,5-7,Refund approved per return policy after inspection
+HPRM-600023,HCUST82620,HORD600023,7999.00,25/06/2026,5-7,Customer escalation - refund approved to close ticket
+HPRM-600030,HCUST19269,HORD600030,"1,999.00",30/05/2026,5-7,Refund approved due to defective item
+HPRM-600031,HCUST10474,HORD600031,2999.00,29-Jun-2026,3-5,Refund approved per return policy after inspection
+HPRM-600032,HCUST95985,HORD600032,2999.00,2026-07-31,5-7,
+HPRM-600033,HCUST86753,HORD600033,"INR 1,999.00",26/02/2026,5-7,Refund approved due to defective item
+HPRM-600034,HCUST28259,HORD600034,"INR 5,999.00",28/04/2026,3-5,
+HPRM-600035,HCUST92080,HORD600035,799.00,2026-05-29,5-7,Refund approved due to defective item
+HPRM-600036,HCUST40243,HORD600036,"2,499.00",27-Jun-2026,3-5,Approved refund - order cancelled before shipment
+HPRM-600037,HCUST84417,HORD600037,3999.00,2026-03-30,5-7,
+HPRM-600038,HCUST81968,HORD600038,2999.00,15-Jul-2026,5-7,
+HPRM-600039,HCUST37618,HORD600039,1499.00,2026-07-15,5-7,
+HPRM-600040,HCUST13255,HORD600040,4999.00,15-Jul-2026,5-7,
