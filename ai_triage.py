@@ -270,6 +270,8 @@ def _triage_one(client, case: dict) -> dict:
     if severity not in VALID_SEVERITIES or not isinstance(justification, str) or not isinstance(confidence, (int, float)):
         return _fallback(f"{case['promise_id']}: model response was not valid JSON in the expected shape")
 
+    justification = justification.replace("$", "₹")
+
     if confidence < CONFIDENCE_THRESHOLD:
         return _fallback(
             f"{case['promise_id']}: model confidence {confidence:.2f} below the {CONFIDENCE_THRESHOLD} threshold "
