@@ -1,0 +1,66 @@
+promise_id,customer_id,order_id,promised_amount,promise_date,promised_window_days,agent_notes
+PRM-200001,USR37460,ORD100001,2499.00,2026-06-19,5-8,"Duplicate charge, refund approved by billing team"
+PRM-200002,CUST84341,ORD100002,4999.00,2026-07-07,3-5,Approved partial refund per manager discretion
+PRM-200003,CID62350,ORD100003,"2,500.00",14/07/2026,7-11,Approved refund - service not rendered as promised
+PRM-200004,USR79352,ORD100004,1500.00,2026-08-08,5-9,Approved partial refund per manager discretion
+PRM-200005,CID23947,ORD100005,12999.00,2026-07-14,7-11,"Refund approved, item damaged in transit"
+PRM-200006,CUST21226,ORD100006,799.00,09/08/2026,5-7,"Wrong item received, refund approved as goodwill"
+PRM-200007,USR25860,ORD100007,2000.00,30/06/2026,5-8,Customer escalation - refund approved to close ticket
+PRM-200008,USR97684,ORD100008,299.00,2026-07-05,3-5,"Customer reported item not delivered, refund approved"
+PRM-200009,CID17100,ORD100009,INR 799.00,02/07/2026,7-10,Approved partial refund per manager discretion
+PRM-200010,CUST68082,ORD100010,999.50,2026-06-18,3-6,"Wrong item received, refund approved as goodwill"
+PRM-200011,USR69638,ORD100011,1999.50,2026-06-29,3-5,Refund approved due to defective item
+PRM-200012,CID30635,ORD100012,300.00,2026-08-10,5-7,Approved refund - service not rendered as promised
+PRM-200013,CID78522,ORD100013,2499.99,2026-08-06,7-9,Approved partial refund per manager discretion
+PRM-200014,CUST19602,ORD100014,12999.00,2026-06-19,3-5,Approved refund - service not rendered as promised
+PRM-200015,CID49240,ORD100015,12999.99,10-Jun-2026,7-10,Refund approved due to defective item
+PRM-200016,CUST22097,ORD100016,"2,000.00",2026-07-14,5-7,"Refund approved, item damaged in transit"
+PRM-200017,CID29536,ORD100017,"INR 12,999.99",2026-08-15,7-10,
+PRM-200018,USR91351,ORD100018,5999.00,03/08/2026,7-9,"Duplicate charge, refund approved by billing team"
+PRM-200019,USR39154,ORD100019,2499.00,03-Aug-2026,3-7,Approved partial refund per manager discretion
+PRM-200020,CID53404,ORD100020,"4,999.00",2026-07-03,3-6,"Refund approved, item damaged in transit"
+PRM-200021,CUST43386,ORD100021,4999.50,02/08/2026,7-11,Approved partial refund per manager discretion
+PRM-200022,USR52753,ORD100022,"INR 5,000.00",2026-07-09,3-7,"Refund approved, item damaged in transit"
+PRM-200023,USR70946,ORD100023,199.00,22/06/2026,5-7,Approved refund - service not rendered as promised
+PRM-200024,CUST72277,ORD100024,2500.00,22/07/2026,5-7,
+PRM-200025,CID42662,ORD100025,199.00,2026-07-25,5-7,"Refund approved, item damaged in transit"
+PRM-200026,CUST45992,ORD100026,14999.50,2026-07-12,5-7,"Refund approved, item damaged in transit"
+PRM-200027,USR53369,ORD100027,999.00,2026-07-28,3-6,
+PRM-200028,CID89069,ORD100028,INR 199.00,2026-06-24,5-8,"Refund approved, item damaged in transit"
+PRM-200029,USR87580,ORD100029,8000.00,2026-07-31,3-6,Approved refund - service not rendered as promised
+PRM-200030,USR46471,ORD100030,"7,999.00",06-Jul-2026,3-6,"Duplicate charge, refund approved by billing team"
+PRM-200031,CID29973,ORD100031,500.00,2026-07-16,3-5,"Wrong item received, refund approved as goodwill"
+PRM-200032,CUST85849,ORD100032,"INR 1,499.99",2026-08-02,7-11,Approved refund - order cancelled before shipment
+PRM-200033,CUST76317,ORD100033,799.99,2026-06-09,3-6,Approved partial refund per manager discretion
+PRM-200034,CID73372,ORD100034,9999.00,2026-07-13,7-11,Approved refund - service not rendered as promised
+PRM-200035,USR33834,ORD100035,12999.99,29/06/2026,7-11,
+PRM-200036,CUST72402,ORD100036,1999.00,2026-06-25,3-7,Customer escalation - refund approved to close ticket
+PRM-200037,USR82140,ORD100037,3500.00,2026-06-17,7-10,"Refund approved, item damaged in transit"
+PRM-200038,USR46241,ORD100038,4999.00,24-Jul-2026,7-11,"Wrong item received, refund approved as goodwill"
+PRM-200039,CUST93606,ORD100039,INR 999.00,2026-06-07,3-5,Refund approved per return policy after inspection
+PRM-200040,CID92502,ORD100040,299.00,08-Aug-2026,5-7,Approved partial refund per manager discretion
+PRM-200041,CUST89905,ORD100041,"INR 7,999.50",23-Jun-2026,5-8,Refund approved per return policy after inspection
+PRM-200042,USR47056,ORD100042,1499.00,17/06/2026,5-8,
+PRM-200043,CID47828,ORD100043,2999.00,26-Jul-2026,3-5,Refund approved per return policy after inspection
+PRM-200044,CID85392,ORD100044,299.50,15/07/2026,7-10,
+PRM-200045,USR97835,ORD100045,"INR 10,000.00",2026-06-17,5-7,"Duplicate charge, refund approved by billing team"
+PRM-200046,CUST96200,ORD100046,499.00,2026-08-02,5-8,Approved partial refund per manager discretion
+PRM-200047,USR25915,ORD100047,1999.00,11-Jul-2026,7-9,Customer escalation - refund approved to close ticket
+PRM-200048,USR64459,ORD100048,12999.00,2026-06-14,7-9,Refund approved per return policy after inspection
+PRM-200049,USR86931,ORD100049,2999.50,2026-07-13,5-9,Refund approved due to defective item
+PRM-200050,USR15720,ORD100050,2000.00,28-Jun-2026,3-7,"Wrong item received, refund approved as goodwill"
+PRM-200051,CUST63736,ORD100051,4999.00,2026-06-10,5-7,
+PRM-200052,CUST40771,ORD100052,7999.00,2026-06-15,7-11,
+PRM-200053,CUST42007,ORD100053,199.00,10/07/2026,5-7,"Duplicate charge, refund approved by billing team"
+PRM-200054,CUST70981,ORD100054,INR 999.00,2026-07-15,5-9,Customer escalation - refund approved to close ticket
+PRM-200055,USR85341,ORD100055,"INR 3,499.00",2026-08-03,5-8,"Wrong item received, refund approved as goodwill"
+PRM-200056,CID96400,ORD100056,3499.00,2026-07-19,7-10,"Wrong item received, refund approved as goodwill"
+PRM-200057,CID57953,ORD100057,3499.00,25-Jul-2026,7-10,"Wrong item received, refund approved as goodwill"
+PRM-200058,USR11824,ORD100058,999.00,2026-06-27,7-11,"Refund approved, item damaged in transit"
+PRM-200059,CUST93283,ORD100059,2499.50,2026-07-06,3-7,Approved refund - service not rendered as promised
+PRM-200060,CID80804,ORD100060,799.00,2026-07-30,3-7,Approved partial refund per manager discretion
+PRM-200061,CID58147,ORD100061,5999.00,17-Jul-2026,5-8,
+PRM-200062,CID37152,ORD100062,INR 199.00,31-Jul-2026,5-7,Approved refund - service not rendered as promised
+PRM-200063,CUST87182,ORD100063,2999.00,2026-08-13,3-7,
+PRM-200064,CID39038,ORD100064,499.50,12/06/2026,5-8,
+PRM-200065,CUST26540,ORD100065,15000.00,2026-08-06,5-7,"Duplicate charge, refund approved by billing team"
